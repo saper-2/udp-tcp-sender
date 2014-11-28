@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -40,6 +41,11 @@
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
+            this.bStopServer = new System.Windows.Forms.Button();
+            this.bConnect = new System.Windows.Forms.Button();
+            this.bSend = new System.Windows.Forms.Button();
+            this.bDisconnect = new System.Windows.Forms.Button();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.ePort)).BeginInit();
             this.SuspendLayout();
             // 
@@ -74,19 +80,21 @@
             // 
             this.button1.Location = new System.Drawing.Point(12, 209);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(156, 23);
+            this.button1.Size = new System.Drawing.Size(105, 23);
             this.button1.TabIndex = 3;
             this.button1.Text = "Send TCP";
+            this.toolTip1.SetToolTip(this.button1, "Send string data using TCP protocol");
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(177, 209);
+            this.button2.Location = new System.Drawing.Point(123, 209);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(164, 23);
+            this.button2.Size = new System.Drawing.Size(93, 23);
             this.button2.TabIndex = 4;
             this.button2.Text = "Send UDP";
+            this.toolTip1.SetToolTip(this.button2, "Send string data using UDP protocol");
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
@@ -142,6 +150,7 @@
             this.button3.Size = new System.Drawing.Size(119, 32);
             this.button3.TabIndex = 11;
             this.button3.Text = "Start TCP Server";
+            this.toolTip1.SetToolTip(this.button3, "Start TCP server");
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
@@ -165,11 +174,59 @@
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
+            // bStopServer
+            // 
+            this.bStopServer.Location = new System.Drawing.Point(657, 49);
+            this.bStopServer.Name = "bStopServer";
+            this.bStopServer.Size = new System.Drawing.Size(119, 23);
+            this.bStopServer.TabIndex = 14;
+            this.bStopServer.Text = "Stop TCP Server";
+            this.toolTip1.SetToolTip(this.bStopServer, "Stop TCP server");
+            this.bStopServer.UseVisualStyleBackColor = true;
+            this.bStopServer.Click += new System.EventHandler(this.bStopServer_Click);
+            // 
+            // bConnect
+            // 
+            this.bConnect.Location = new System.Drawing.Point(414, 209);
+            this.bConnect.Name = "bConnect";
+            this.bConnect.Size = new System.Drawing.Size(75, 23);
+            this.bConnect.TabIndex = 15;
+            this.bConnect.Text = "TCP Conn.";
+            this.toolTip1.SetToolTip(this.bConnect, "Manual connection control: Connect to TCP server.");
+            this.bConnect.UseVisualStyleBackColor = true;
+            this.bConnect.Click += new System.EventHandler(this.bConnect_Click);
+            // 
+            // bSend
+            // 
+            this.bSend.Location = new System.Drawing.Point(495, 209);
+            this.bSend.Name = "bSend";
+            this.bSend.Size = new System.Drawing.Size(75, 23);
+            this.bSend.TabIndex = 16;
+            this.bSend.Text = "TCP Send";
+            this.toolTip1.SetToolTip(this.bSend, "Manual connection control: Send data using opened connection.");
+            this.bSend.UseVisualStyleBackColor = true;
+            this.bSend.Click += new System.EventHandler(this.bSend_Click);
+            // 
+            // bDisconnect
+            // 
+            this.bDisconnect.Location = new System.Drawing.Point(576, 209);
+            this.bDisconnect.Name = "bDisconnect";
+            this.bDisconnect.Size = new System.Drawing.Size(75, 23);
+            this.bDisconnect.TabIndex = 17;
+            this.bDisconnect.Text = "TCP Discon.";
+            this.toolTip1.SetToolTip(this.bDisconnect, "Manual connection control: Disconnect from server.");
+            this.bDisconnect.UseVisualStyleBackColor = true;
+            this.bDisconnect.Click += new System.EventHandler(this.bDisconnect_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(788, 371);
+            this.Controls.Add(this.bDisconnect);
+            this.Controls.Add(this.bSend);
+            this.Controls.Add(this.bConnect);
+            this.Controls.Add(this.bStopServer);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
@@ -208,6 +265,11 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button bStopServer;
+        private System.Windows.Forms.Button bConnect;
+        private System.Windows.Forms.Button bSend;
+        private System.Windows.Forms.Button bDisconnect;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }
 

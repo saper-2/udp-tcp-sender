@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
 using System.Windows.Forms;
@@ -12,10 +13,14 @@ namespace UDP_TCP_Sender
 {
     public partial class Form1 : Form
     {
+
         public Form1()
         {
             InitializeComponent();
         }
+
+        TcpClient tcpClient = null;
+
 
         void aLog(string msg, bool noNewLine = false, bool noDate = false)
         {
@@ -97,6 +102,8 @@ namespace UDP_TCP_Sender
             return res;
         }
 
+        
+
         private void button1_Click(object sender, EventArgs e)
         {
             aLog("Sending TCP data to: " + eDest.Text + ":" + ePort.Value.ToString() + 
@@ -114,7 +121,25 @@ namespace UDP_TCP_Sender
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            eDest.Text = "192.168.2.32";
+            string s = "";
+            eDest.Text = "";
+            aLog("Local IP addresses are: ");
+            foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                if (item.OperationalStatus == OperationalStatus.Up)
+                {
+                    foreach (UnicastIPAddressInformation ip in item.GetIPProperties().UnicastAddresses)
+                    {
+                        if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
+                        {
+                            //s += ip.Address.ToString() + " ";
+                            aLog("   - " + ip.Address.ToString() + " : " + item.Name, false, true);
+                            if (eDest.Text.Length < 1) eDest.Text = ip.Address.ToString();
+                        }
+                    }
+                }
+            }
+
             ePort.Value = 2222;
         }
 
@@ -182,6 +207,98 @@ namespace UDP_TCP_Sender
         private void button5_Click(object sender, EventArgs e)
         {
             aLog("Created by saper_2. Mainly for testing ESP8266 comm.");
+        }
+
+        private void bStopServer_Click(object sender, EventArgs e)
+        {
+            if (server != null)
+            {
+                server.StopTcpServer();
+                server = null;
+            }
+        }
+
+        private void bSend_Click(object sender, EventArgs e)
+        {
+            if (tcpClient != null)
+            {
+                if (tcpClient.Connected)
+                {
+                    try
+                    {
+                        IPEndPoint rip = tcpClient.Client.RemoteEndPoint as IPEndPoint;
+                        string reip = "";
+                        if (rip == null) reip = "-unknown-:-unkn-";
+                        reip = rip.Address.ToString() + ":" + rip.Port.ToString();
+                        aLog("Manual control: Sending TCP data to: " + reip +
+                                ", len=" + eData.Text.Length.ToString() + " data=" + eData.Text);
+                        
+                        string data = eData.Text;
+                        byte[] dta = Encoding.ASCII.GetBytes(data);
+                        NetworkStream ns = tcpClient.GetStream();
+                        ns.Write(dta, 0, dta.Length);
+                        //ns.Flush();
+                        aLog("Manual control: sent ok.");
+                    }
+                    catch (Exception ee)
+                    {
+                        aLog("Manual control: ERROR: Sending data failed!" + Environment.NewLine + ee.ToString());
+                    }
+                    
+                }
+                else
+                {
+                    aLog("Manual control: ERROR: Connection closed.");
+                }
+            }
+            else
+            {
+                aLog("Manual control: ERROR: Not created connection, use TCP Conn. button to connect first!");
+            }
+        }
+
+        private void bConnect_Click(object sender, EventArgs e)
+        {
+            if (tcpClient == null)
+            {
+                try
+                {
+                    tcpClient = new TcpClient(eDest.Text, Convert.ToInt32(ePort.Value));
+                    aLog("Manual control: Connected to: " + eDest.Text+":"+ePort.Value.ToString());
+                }
+                catch (Exception ee)
+                {
+                    aLog("Manual control: Can not connect. " + ee.ToString());
+                }
+            }
+        }
+
+        private void bDisconnect_Click(object sender, EventArgs e)
+        {
+            if (tcpClient != null)
+            {
+                if (tcpClient.Connected)
+                {
+                    try
+                    {
+                        tcpClient.Close();
+                        tcpClient = null;
+                        aLog("Manual control: Disconnected from server.");
+                    }
+                    catch (Exception ee)
+                    {
+                        aLog("Manual control: Disconnect error: " + ee.ToString());
+                    }
+                }
+                else
+                {
+                    aLog("Manual control: ERROR: Not connected.");
+                }
+            }
+            else
+            {
+                aLog("Manual control: To close connection you need first to connect...");
+            }
         }
     }
 }
